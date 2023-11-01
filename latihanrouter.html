@@ -1,0 +1,145 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    body {
+        margin: 5%;
+    }
+
+    .active {
+        background: salmon;
+        border: 1;
+        padding: 5px;
+    }
+</style>
+
+<body style="background-color: black;color: white;">
+
+    <div id="app">
+
+        <header-component></header-component>
+
+        <nav>
+            <router-link to="/">Home</router-link>
+            <router-link to="/about">About</router-link>
+            <router-link to="/kelas">Kelas</router-link>
+        </nav>
+
+        <pesan-component nama="Administrator"></pesan-component>
+
+        <main>
+            <!-- <kelas v-bind:items="kelas" v-on:submitkelas="submitkelas" v-on:hapuskelas="hapuskelas"></kelas> -->
+            <!-- <home></home> -->
+            <router-view v-bind:items="kelas" v-on:submitkelas="submitkelas" v-on:hapuskelas="hapuskelas"></router-view>
+        </main>
+
+        <footer-component>
+            <p>Copyright 2023 - Han </p>
+        </footer-component>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://unpkg.com/vue-router@3"></script>
+
+
+    <script>
+
+        const Home = { template: '<div>Home</div>' }
+        const About = { template: '<div>About</div>' }
+        const Kelas = {
+            props: ['items'],
+            template: `
+            <div>
+            <h3>Tambah Kelas Baru</h3>
+            <input type="text" placeholder="Nama Kelas" v-on:keyup.enter="$emit('submitkelas', $event)">
+            <br>
+            <h4>Daftar Kelas ({{ items.length }})</h4>
+            <ul v-if="items.length >=1">
+                <li v-for="(item, index ) of items">{{ index+1 }} - {{ item }}
+                    <a href="" v-on:click.prevent="$emit('hapuskelas', index)">Hapus</a>
+                </li>
+            </ul>
+            <h2 v-else>Data Kelas Kosong</h2>
+            </div>
+            `,
+            data: function () {
+                return {
+                }
+            },
+            methods: {}
+        }
+
+
+
+        Vue.component('pesan-component', {
+            props: ['nama'],
+            template: `<h3>{{'Hello '+ nama }}</h3>`,
+            data: function () {
+                return {
+                    pesan: "{{ 'Hello'+nama }}"
+                }
+            },
+        })
+
+        Vue.component('header-component', {
+            template: `
+            <header>
+            <img src="img/gambar.png" alt="" width="100">
+            </header>
+            `
+        })
+
+        Vue.component('footer-component', {
+            template: `
+            <footer>
+                <slot></slot>
+            </footer>    
+            `
+        })
+
+
+
+        const routes = [
+            { path: '/', component: Home },
+            { path: '/about', component: About },
+            { path: '/kelas', component: Kelas },
+        ]
+
+        const router = new VueRouter({
+            mode: 'history',
+            routes
+        })
+
+        const vm = new Vue({
+            el: '#app',
+            router,
+            components: {
+                'home': Home
+            },
+            data: {
+                kelas: ['PHP', 'HTML', 'JS', 'Laravel'],
+            },
+            methods: {
+                hapuskelas: function (index) {
+                    this.kelas.splice(index, 1);
+                },
+                submitkelas: function (event) {
+                    const text = event.target.value
+                    this.kelas.unshift(text);
+                }
+            },
+            computed: {
+
+            }
+        })
+        Vue.config.devtools = true
+    </script>
+</body>
+
+</html>

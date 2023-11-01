@@ -1,0 +1,184 @@
+<!-- <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> -->
+
+<div id="app">
+  {{ huruf }} {{ angka }}
+  <br />
+  <div style="margin-top: 10px">
+    <button style="margin: 5px" @click="tambah">Tambah</button>
+    <button style="margin: 5px" @click="ulangi">Reset</button>
+    <button style="margin: 5px" @click="kurang">Kurang</button>
+    <br />
+    <input type="text" v-on:keydown.enter="say" />
+    <br />
+    <img :src="src" alt="" :style="{width: responsiveWidth}" /><br />
+    <a :href="url">Go To Google</a>
+    <br /><br />
+    <hr />
+    <br />
+    <div style="display: table; clear: both">
+      <div style="width: 40%; float: left; padding-right: 90px">
+        <h3>Formulir</h3>
+        <label for="">Username : </label>
+        <input type="text" placeholder="username" v-model="username" />
+        <br /><br />
+        <label for="">Alamat</label><br />
+        <textarea
+          name="alamat"
+          id=""
+          cols="30"
+          rows="10"
+          v-model="alamat"
+        ></textarea>
+        <br /><br />
+        Jenis Kelamin <br />
+        <input type="radio" value="Pria" v-model="kelamin" />Pria
+        <input type="radio" value="Wanita" v-model="kelamin" />Wanita
+        <br /><br />
+        Hobbi <br />
+        <input type="checkbox" value="Berenang" v-model="hobi" />Berenang
+        <br />
+        <input type="checkbox" value="Rebahan" v-model="hobi" />Rebahan
+        <br />
+        <input type="checkbox" value="Gaming" v-model="hobi" />Gaming
+        <br />
+        <input type="checkbox" value="Nongkrong" v-model="hobi" />Nongkrong
+        <br /><br />
+        <label for="">Gelar</label>
+        <select name="gelar" id="" v-model="gelar">
+          <option value="" disabled>Pilih Gelar</option>
+          <option value="S1">Sarjana</option>
+          <option value="S2">Magister</option>
+          <option value="S3">Doktor</option>
+        </select>
+      </div>
+      <div style="width: 40%; float: left">
+        <h3>Hasil Formulir</h3>
+        <p>Username = {{ username }}</p>
+        <p>Alamat = {{ alamat }}</p>
+        <p>Jenis Kelamin = {{ kelamin }}</p>
+        <p>
+          Hobby =
+          <span v-if="hobi.length > 0">
+            <ul v-for="item in hobi">
+              <li>{{ item }}</li>
+            </ul>
+          </span>
+        </p>
+        <p>Gelar = {{ gelar }}</p>
+      </div>
+    </div>
+    <hr />
+    <h2>Menghitung Luas</h2>
+    <label for="">Panjang 1 : </label>
+    <input type="text" v-model="panjang1" /><br /><br />
+    <label for="">Panjang 2 : </label>
+    <input type="text" v-model="panjang2" /><br /><br />
+    <label for="">Luas : {{ hitungluas }}</label>
+    <hr />
+    <h3>Verifikasi Input</h3>
+    <br />
+    <input type="text" name="" id="" v-model="verifikasi" />
+    <hr />
+    <h3>Form Register</h3>
+    <br />
+    <label for="">Username : </label><br />
+    <input type="text" v-model="usrname" />
+    <label for="" style="color: red" v-if="usernameError"
+      >Username Kurang 8 Karakter</label
+    ><br /><br />
+    <label for="">Password : </label><br />
+    <input type="text" v-model="pass" />
+    <label for="" style="color: red" v-if="passError"
+      >Password Kurang 8 Karakter</label
+    ><br /><br />
+    <label for="">Confirm Password</label><br />
+    <input type="text" v-model="repass" />
+    <label for="" style="color: red" v-if="repassError"
+      >Password tidak sesuai</label
+    ><br /><br />
+    <input type="submit" value="Login" :style="{display: btnsubmit}" />
+    <br /><br />
+  </div>
+</div>
+
+<script type="module">
+  import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+
+  createApp({
+    watch: {
+      verifikasi(params) {
+        console.log(params);
+      },
+      usrname(value) {
+        if (value.length < 8) {
+          this.usernameError = true;
+          this.btnsubmit = "none";
+        } else {
+          this.usernameError = false;
+        }
+      },
+      pass(value) {
+        if (value.length < 8) {
+          this.passError = true;
+          this.btnsubmit = "none";
+        } else {
+          this.passError = false;
+        }
+      },
+      repass(value) {
+        if (this.pass != this.repass) {
+          this.repassError = true;
+          this.btnsubmit = "none";
+        } else {
+          this.repassError = false;
+            this.btnsubmit = "inline";
+        }
+      },
+    },
+    computed: {
+      hitungluas() {
+        return this.panjang1 * this.panjang2;
+      },
+    },
+    data() {
+      return {
+        verifikasi: "",
+        angka: 0,
+        huruf: "ANGKANYA : ",
+        src: "https://source.unsplash.com/400x400",
+        url: "https://google.com",
+        responsiveWidth: "400px",
+        username: "",
+        alamat: "",
+        kelamin: "",
+        hobi: [],
+        gelar: "",
+        panjang1: "",
+        panjang2: "",
+        usrname: "",
+        pass: "",
+        repass: "",
+        usernameError: false,
+        passError: false,
+        repassError: false,
+        btnsubmit: "none",
+      };
+    },
+    methods: {
+      tambah: function () {
+        return this.angka++;
+      },
+      kurang: function () {
+        return this.angka--;
+      },
+      ulangi: function () {
+        return (this.angka = 0);
+      },
+      say: function () {
+        // confirm("Hello")
+        alert("HELLO WORLD");
+      },
+    },
+    components: {},
+  }).mount("#app");
+</script>

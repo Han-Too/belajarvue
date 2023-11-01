@@ -1,0 +1,187 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    body {
+        margin: 5%;
+    }
+
+    .active {
+        background: salmon;
+        border: 1;
+        padding: 5px;
+    }
+</style>
+
+<body>
+
+    <div id="app">
+        <header>
+
+            <br>
+
+            <button v-bind:class="{active:menu === 'home'}" @click="menu = 'home'">Home</button>
+            <button v-bind:class="{active:menu === 'about'}" @click="menu = 'about'">About</button>
+            <button v-bind:class="{active:menu === 'blog'}" @click="menu = 'blog'">Blog</button>
+            <button v-bind:class="{active:menu === 'alert'}" @click="greating">Greating</button>
+            
+            <br>
+
+
+
+            <br>
+            <img :src="gambar" width="200" alt="">
+            <h1>{{ bilangan }}</h1>
+            <h4>Bilangan ini adalah bilangan {{ infoBilangan }}</h4>
+
+            <h1>{{ kelas }}</h1>
+            <input type="text" placeholder="Name" v-on:keyup.enter="submit">
+            <br>
+
+            <div>
+
+                <h1 v-if="kelas.length >= 1" v-text="kelas"></h1>
+                <h1 v-else >Data Kosong</h1>
+
+                <template v-if="kelas.length >= 1">
+                    <ul>
+                        <li v-for="(b, index) of kelas">{{ index+1 }} - {{ b }}</li>
+                    </ul>
+                </template>
+                <template>
+                    <li v-else>Data Kosong</li>
+                </template>
+                <br>
+                <label><input type="checkbox" value="React" v-model="kelas">React</label>
+                <label><input type="checkbox" value="Angular" v-model="kelas">Angular</label>
+                <label><input type="checkbox" value="Vue" v-model="kelas">Vue</label>
+                <label><input type="checkbox" value="PHP" v-model="kelas">PHP</label>
+                <label><input type="checkbox" value="Laravel" v-model="kelas">Laravel</label>
+                <label><input type="checkbox" value="JS" v-model="kelas">JS</label>
+
+            </div>
+
+            <br>
+            <h1>Bilangan Ganjil </h1>
+            <ul>
+                <li v-for="x in cariGanjil(number)">{{ x }}</li>
+            </ul>
+            <br>
+
+            <br>
+            <h1>Bilangan Genap </h1>
+            <ul>
+                <li v-for="x in cariGenap(number)">{{ x }}</li>
+            </ul>
+            <br>
+
+            <br>
+            <h1 v-text="angka"></h1>
+            <h3>Angka Ini adalah Angka {{ infoAngka }}</h3>
+            <p>
+                <button @click="handleClick">Ditekan</button>
+                <button @click="angka = 0">Reset</button>
+            </p>
+            <br>
+
+            <br>
+            <h1 v-text="name"></h1>
+            <h5 v-html="link"></h5>
+
+            <br>
+            <h1>
+                {{ isian }}
+            </h1>
+            <input type="text" v-model="isian" v-on:keyup.enter="enter">
+        </header>
+
+        <footer>
+            <p>Copyright 2023</p>
+        </footer>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+
+        const vm = new Vue({
+
+            el: '#app',
+            data: {
+                name: 'HanToo',
+                pesan: 'HahahaHihihi',
+                qty: 1,
+                namaDepan: "John",
+                namaBelakang: "Doe",
+                bilangan: 10,
+                angka: 1,
+                gambar: "img/gambar.png",
+                link: "<a href='http://google.com' target='_blank'>Go To Google</a>",
+                menu: 'home',
+                kelas: [],
+                buah: ['Apel', 'Jeruk', 'Mangga', 'Stroberi'],
+                number: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                isian: '',
+            },
+            methods: {
+                greating: function (){
+                    alert('Hallo, ' +this.name);
+                },
+                getName: function () {
+                    return 'Hello, ' + this.name;
+                },
+                ubahNama: function (namaBaru) {
+                    this.name = namaBaru
+                    return this.getName()
+                },
+                handleClick: function () {
+                    this.angka++
+                },
+                submit: function(event){
+                    let text = event.target.value;
+                    this.kelas.push(text);
+                    alert('Sukses Menambahkan');
+                    event.target.value = "";
+                },
+                enter: function(event){
+                    let text = event.target.value;
+                    this.isian.unshift(text);
+                    this.isian = ''
+                },
+                cariGenap: function (x) {
+                    return x.filter(i => {
+                        return i % 2 == 0;
+                    })
+                },
+                
+                cariGanjil: function (x) {
+                    return x.filter(i => {
+                        return !(i % 2 == 0);
+                    })
+                },
+            },
+            computed: {
+                totalBayar: function () {
+                    return this.qty * 10000
+                },
+                namaLengkap: function () {
+                    return this.namaDepan + this.namaBelakang
+                },
+                infoBilangan: function () {
+                    return this.bilangan % 2 == 0 ? "Genap" : "Ganjil"
+                },
+                infoAngka: function () {
+                    return this.angka % 2 == 0 ? "Genap" : "Ganjil"
+                }
+            }
+        })
+        Vue.config.devtools = true
+    </script>
+</body>
+
+</html>

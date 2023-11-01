@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To Do List</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body style="background-color: rgb(0, 161, 193)">
+    <style>
+      .doned {
+        text-decoration-line: line-through;
+        color: red;
+      }
+      .btndoned {
+        display: none;
+      }
+    </style>
+    <div id="app" class="container">
+      <div class="display-1 fw-bold text-light text-center my-xl-5">
+        <span>To Do List</span>
+      </div>
+      <div class="text-center row justify-content-center my-5">
+        <input
+          type="time"
+          v-model="startTime"
+          class="form-control-sm mx-2 col-1"
+        />
+        <input
+          type="time"
+          v-model="endTime"
+          class="form-control-sm mx-2 col-1"
+        />
+        <input
+          type="text"
+          v-model="activity"
+          placeholder="Text"
+          class="form-control-lg mx-2 col"
+          v-on:keydown.enter="addTodo"
+        />
+      <div v-if="hasError">
+        <br>
+          <label for="" style="color: red" >Mohon Isi Data</label>
+      </div>
+        <button @click="addTodo" class="btn btn-primary mx-2 col-2">
+          Tambah
+        </button>
+      </div>
+      <div class="text-center">
+        <div v-if="todoList.length > 0">
+          <table class="table table-striped table-primary">
+            <tbody>
+              <tr v-for="(item,index) in todoList">
+                <td width="25%">
+                  <span class="fs-5">
+                    {{ item.start }}&nbsp; - &nbsp;{{ item.end }}
+                  </span>
+                </td>
+                <td>
+                  <span :class="{doned: item.done}" style="font-size: larger">
+                    {{ item.text }}
+                  </span>
+                </td>
+                <td width="15%">
+                  <button class="btn btn-danger" @click="removeTodo(index)">
+                    Delete
+                  </button>
+                </td>
+                <td width="15%">
+                  <button
+                    class="btn btn-success"
+                    @click="doned(index)"
+                    :class="{btndoned: item.done}"
+                  >
+                    Done
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <span v-else class="fs-2 text-light">Tidak Ada Aktivitas</span>
+      </div>
+    </div>
+
+    <script type="module">
+      import {
+        createApp,
+        ref,
+      } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+
+      createApp({
+        watch: {
+          activity(value) {
+            if (value.length < 0) {
+              this.hasError = true;
+            } else {
+              this.hasError = false;
+            }
+          },
+        },
+        data() {
+          return {
+            startTime: "",
+            endTime: "",
+            activity: "",
+            // todoList: JSON.parse(localStorage.getItem("todoList"))
+            todoList: [],
+            active: "",
+            hasError: false,
+          };
+        },
+        methods: {
+          addTodo() {
+            let data = {
+              text: this.activity,
+              start: this.startTime,
+              end: this.endTime,
+              done: false,
+            };
+            // var list = JSON.parse(localStorage.getItem("todoList"))
+            // list.splice(data)
+            // localStorage.setItem('todoList',JSON.stringify(data))
+            this.todoList.push(data);
+          },
+          removeTodo(params) {
+            this.todoList.splice(params, 1);
+          },
+          doned(index) {
+            this.todoList[index].done = true;
+          },
+        },
+      }).mount("#app");
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
